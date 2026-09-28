@@ -1,7 +1,9 @@
 # AGENTS.md
 
-Convenciones de este proyecto (Spring Boot + H2 + JPA). Son las mismas que las del proyecto
-hermano `practica-spring`, adaptadas al dominio de giftcards.
+Convenciones de este proyecto (Spring Boot + H2 + JPA).
+
+Para la descripción del dominio y la arquitectura general (actores, alcance, diagramas C4), ver
+[`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ## Stack
 
@@ -20,7 +22,7 @@ Todo bajo `ar.edu.unsam.ddso.giftcards`, organizado por capa (no por feature):
   en un controller.
 - `model` — entidades `@Entity`. Contienen las reglas de negocio/invariantes del dominio (los
   métodos de negocio viven en la entidad, no en el service, cuando son invariantes propias del
-  objeto — ver `Cuenta.transferir` en `practica-spring` como referencia).
+  objeto).
   - `model/enums` — enums del dominio.
   - `model/exceptions` — excepciones de **reglas de negocio del dominio** (ej. violar un
     invariante). Extienden `RuntimeException`.
@@ -48,7 +50,7 @@ Todo bajo `ar.edu.unsam.ddso.giftcards`, organizado por capa (no por feature):
 
 ## Repositorios
 
-Patrón usado en `practica-spring` para poder tener datos de prueba sin depender de la base real:
+Patrón para poder tener datos de prueba sin depender de la base real:
 
 - Una interfaz de dominio en `repository` (ej. `CuentaRepository`) con los métodos que necesita
   el `service`.
@@ -99,7 +101,7 @@ Patrón usado en `practica-spring` para poder tener datos de prueba sin depender
 - `XxxApplicationTests` con `@SpringBootTest` y un `contextLoads()` vacío como smoke test.
 - Tests de entidades (reglas de negocio) separados de tests de service (orquestación).
 
-## Estilo y calidad (igual que `practica-spring`)
+## Estilo y calidad
 
 - Formateo automático con `pre-commit` (`.pre-commit-config.yaml`):
   - `pretty-format-java --aosp` (google-java-format, estilo AOSP) — no discutir el formato,
