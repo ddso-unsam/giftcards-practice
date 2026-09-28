@@ -96,8 +96,8 @@ Patrón usado en `practica-spring` para poder tener datos de prueba sin depender
 - Unitarios con JUnit 5 + Mockito, sin levantar contexto de Spring:
   - `@ExtendWith(MockitoExtension.class)`, `@Mock` para los repositorios, se instancia el
     `service`/entidad a mano.
-  - Comentarios `// Pre condicion`, `// Accion`, `// Post condicion` para marcar las secciones
-    del test (estilo Given/When/Then en español).
+  - Comentarios `// Given`, `// When`, `// Then` para marcar las secciones del test (en inglés,
+    como el resto del código).
   - `assertEquals`, `assertThrows` de `org.junit.jupiter.api.Assertions` (import estático).
 - `XxxApplicationTests` con `@SpringBootTest` y un `contextLoads()` vacío como smoke test.
 - Tests de entidades (reglas de negocio) separados de tests de service (orquestación).
@@ -114,8 +114,10 @@ Patrón usado en `practica-spring` para poder tener datos de prueba sin depender
   columnas, no obliga `final` en parámetros): solo chequea imports, naming, buenas prácticas
   básicas (`EqualsHashCode`, `NeedBraces`, `HiddenField` con excepciones para constructor/setter).
   No endurecerlo sin que lo pida el usuario.
-- Nombres de dominio en español (`Cuenta`, `Movimiento`, `transferir`, `saldo`), nombres técnicos
-  (paquetes, anotaciones, términos de Spring/JPA) en inglés. Mantener esa mezcla, es intencional.
+- A diferencia de `practica-spring` (que mezcla nombres de dominio en español con términos
+  técnicos en inglés), en este proyecto **todo el código va en inglés**: clases, campos,
+  métodos, comentarios, mensajes de excepción, nombres de test. La documentación (este archivo,
+  `README.md`, `ARCHITECTURE.md`, `spec.md`/`plan.md`) se mantiene en español.
 - Imports: sin wildcard imports en código de producción (sí se usa `import static ... *` en
   tests para `Mockito`/`Assertions`).
 

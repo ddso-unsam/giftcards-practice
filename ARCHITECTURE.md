@@ -100,16 +100,72 @@ C4Container
     Rel(api, sistemaEmpresa, "Notifica uso", "HTTP POST (webhook)")
 ```
 
-## 7. Preguntas abiertas / próximos pasos
+## 7. Diagrama de clases de dominio
+
+Primera versión del modelo (clases planas en `model/`, todavía sin anotaciones JPA — ver
+`AGENTS.md`).
+
+```mermaid
+classDiagram
+    class Customer {
+        +Long id
+        +String name
+        +String description
+        +String cuil
+    }
+
+    class Company {
+        +Long id
+        +String name
+        +String description
+        +String cuil
+        +String notificationUrl
+    }
+
+    class GiftCard {
+        +Long id
+        +LocalDateTime creationDate
+        +GiftCardStatus status
+        +BigDecimal amount
+    }
+
+    class GiftCardUsage {
+        +Long id
+        +LocalDateTime date
+        +String product
+        +String place
+    }
+
+    class GiftCardStatus {
+        <<enumeration>>
+        ACTIVE
+        USED
+    }
+
+    GiftCard "*" --> "1" Customer : customer
+    GiftCard "*" --> "1" Company : company
+    GiftCard "1" *-- "0..*" GiftCardUsage : usages
+    GiftCard --> GiftCardStatus : status
+```
+
+Notas:
+- `GiftCard` referencia a un `Customer` y una `Company` (muchas giftcards por cliente/empresa).
+- La relación con `GiftCardUsage` es bidireccional: `GiftCard.usages` (lista) y
+  `GiftCardUsage.giftCard` (referencia de vuelta). Se modeló como composición: un uso no tiene
+  sentido sin su giftcard.
+- `GiftCardStatus` por ahora solo tiene `ACTIVE`/`USED` — a revisar si hace falta algo como
+  `EXPIRED` o `CANCELLED`.
+
+## 8. Preguntas abiertas / próximos pasos
 
 A resolver en los `spec.md`/`plan.md` de las features que correspondan, no acá:
 
-- Modelo de datos concreto de Empresa/Giftcard/Uso (atributos, estados posibles de una giftcard).
 - Cómo se identifica/autentica a una Empresa y a una Persona en la API (por ahora no hay
   autenticación definida).
 - Formato del payload del webhook y política de reintentos ante fallas de entrega.
-- Si una giftcard puede usarse una sola vez o varias (parcial/total).
+- Si `GiftCardStatus` necesita más estados (`EXPIRED`, `CANCELLED`, etc.) y qué reglas de
+  negocio gobiernan las transiciones entre estados.
 
-## 8. Referencias
+## 9. Referencias
 
 - Convenciones de código: [`AGENTS.md`](AGENTS.md).
