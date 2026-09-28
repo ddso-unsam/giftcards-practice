@@ -3,6 +3,9 @@
 Convenciones de este proyecto (Spring Boot + H2 + JPA). Son las mismas que las del proyecto
 hermano `practica-spring`, adaptadas al dominio de giftcards.
 
+Para la descripción del dominio y la arquitectura general (actores, alcance, diagramas C4), ver
+[`ARCHITECTURE.md`](ARCHITECTURE.md).
+
 ## Stack
 
 - Java 21, Spring Boot (`spring-boot-starter-parent`).

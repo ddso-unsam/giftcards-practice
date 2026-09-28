@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/maven,java,eclipse,intellij+iml,visualstudiocode,web
 # Edit at https://www.toptal.com/developers/gitignore?templates=maven,java,eclipse,intellij+iml,visualstudiocode,web
 
+### IA ###
+.claude
+
 ### Eclipse ###
 .metadata
 bin/
