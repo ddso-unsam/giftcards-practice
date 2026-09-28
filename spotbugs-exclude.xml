@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <!--
+    Las entidades JPA exponen sus asociaciones (@ManyToOne, etc.) via getters/setters
+    generados por Lombok, que es el patron esperado para que Hibernate y los mappers
+    de service puedan navegarlas. SpotBugs marca esto como EI_EXPOSE_REP/EI_EXPOSE_REP2
+    aunque es el uso normal de una entidad JPA.
+  -->
+  <Match>
+    <Package name="ar.edu.unsam.ddso.giftcards.model" />
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+  </Match>
+</FindBugsFilter>
