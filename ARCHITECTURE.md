@@ -169,3 +169,16 @@ A resolver en los `spec.md`/`plan.md` de las features que correspondan, no acá:
 ## 9. Referencias
 
 - Convenciones de código: [`AGENTS.md`](AGENTS.md).
+
+
+## 10. API REST
+
+- La api es privada, pero vamos a suponer que la autenticación y autorización se manejan en otra app(gateway).
+- Recursos: company, customer, giftcard (uso?)
+- Operaciones:
+  - hay que poder crearlos todos
+  - hay que poder obtenerlos, al menos para probar
+- Como usamos una gift card:
+  - Crear gift card (monto)
+    - Crear Company
+    - Crear Customer
