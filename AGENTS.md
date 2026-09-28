@@ -46,7 +46,8 @@ Todo bajo `ar.edu.unsam.ddso.giftcards`, organizado por capa (no por feature):
 
 ## DTOs
 
-- `record`, no clases. Un DTO por response/request, nombrados `<Algo>Response` / `<Algo>Request`.
+- `record`, no clases. Un DTO por response/request, nombrados `<Algo>RequestDTO` / `<Algo>ResponseDTO`
+  (sufijo `DTO` al final del nombre, ej. `CompanyCreateRequestDTO`, `CompanyResponseDTO`).
 - Sin lógica; solo transporte de datos.
 
 ## Repositorios
