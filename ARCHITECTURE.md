@@ -173,12 +173,122 @@ A resolver en los `spec.md`/`plan.md` de las features que correspondan, no acá:
 
 ## 10. API REST
 
-- La api es privada, pero vamos a suponer que la autenticación y autorización se manejan en otra app(gateway).
-- Recursos: company, customer, giftcard (uso?)
-- Operaciones:
-  - hay que poder crearlos todos
-  - hay que poder obtenerlos, al menos para probar
-- Como usamos una gift card:
-  - Crear gift card (monto)
-    - Crear Company
-    - Crear Customer
+- La api es privada, pero vamos a suponer que la autenticación y autorización se manejan en otra
+  app (gateway).
+- Formato: JSON. Sin autenticación propia (delegada al gateway).
+- Manejo de errores (`GlobalExceptionHandler`, ver `AGENTS.md`):
+  - Recurso no encontrado → `404` con body `{"error": "<mensaje>"}`.
+  - Violación de una regla de negocio (ej. `cuil` duplicado) → `409` con el mismo formato.
+  - Datos inválidos en el request (bean validation) → `400` con el mismo formato.
+- Recursos expuestos hasta ahora: `company`, `customer`. `giftcard` (alta + uso) queda pendiente,
+  ver sección "Pendiente" más abajo y `Backlog.md`.
+
+Los ejemplos asumen la app levantada en local (`./mvnw spring-boot:run`, perfil `local`, H2 en
+memoria, sin datos precargados).
+
+### Company
+
+| Método | Path              | Descripción          |
+| ------ | ----------------- | --------------------- |
+| `POST` | `/companies`      | Alta de una company    |
+| `GET`  | `/companies/{id}` | Consulta por id        |
+
+Reglas de validación del alta:
+
+- `name`: sin restricciones por ahora.
+- `cuil`: obligatorio y único entre companies.
+- `notificationUrl`: opcional; si viene, debe ser una URL `http(s)` válida.
+
+**Alta**
+
+```bash
+curl -s -X POST http://localhost:8080/companies \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Acme","description":"Retail de electrodomésticos","cuil":"30-11111111-1","notificationUrl":"https://acme.example.com/webhooks/giftcards"}'
+```
+
+Respuesta (`201 Created`):
+
+```json
+{
+  "id": 1,
+  "name": "Acme",
+  "description": "Retail de electrodomésticos",
+  "cuil": "30-11111111-1",
+  "notificationUrl": "https://acme.example.com/webhooks/giftcards"
+}
+```
+
+Si el `cuil` ya existe (`409 Conflict`):
+
+```json
+{ "error": "A company with cuil 30-11111111-1 already exists" }
+```
+
+Si falta el `cuil` o `notificationUrl` no es una URL válida (`400 Bad Request`):
+
+```json
+{ "error": "cuil is required" }
+```
+
+```json
+{ "error": "notificationUrl must be a valid http(s) URL" }
+```
+
+**Consulta**
+
+```bash
+curl -i http://localhost:8080/companies/1
+```
+
+`200 OK` con el mismo body que el alta. Si no existe, `404 Not Found`:
+
+```json
+{ "error": "Company not found with id 999" }
+```
+
+### Customer
+
+| Método | Path              | Descripción         |
+| ------ | ----------------- | -------------------- |
+| `POST` | `/customers`      | Alta de un customer   |
+| `GET`  | `/customers/{id}` | Consulta por id       |
+
+**Alta**
+
+```bash
+curl -s -X POST http://localhost:8080/customers \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Juana Pérez","description":"Clienta frecuente","cuil":"27-33333333-3"}'
+```
+
+Respuesta (`201 Created`):
+
+```json
+{
+  "id": 1,
+  "name": "Juana Pérez",
+  "description": "Clienta frecuente",
+  "cuil": "27-33333333-3"
+}
+```
+
+**Consulta**
+
+```bash
+curl -i http://localhost:8080/customers/1
+```
+
+`200 OK` con el mismo body que el alta. Si no existe, `404 Not Found`:
+
+```json
+{ "error": "Customer not found with id 999" }
+```
+
+### Pendiente
+
+- Alta y uso de `giftcard`: asociar a `Company` + `Customer`, registrar `GiftCardUsage` y
+  disparar el webhook al `notificationUrl` de la company.
+- Listados/paginación: por ahora cada recurso solo tiene consulta por id.
+- Validaciones de `Customer` (hoy solo `Company` valida unicidad/formato — a extender si hace
+  falta).
