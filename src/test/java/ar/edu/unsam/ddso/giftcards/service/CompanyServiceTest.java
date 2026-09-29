@@ -3,11 +3,14 @@ package ar.edu.unsam.ddso.giftcards.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ar.edu.unsam.ddso.giftcards.dto.CompanyCreateRequestDTO;
 import ar.edu.unsam.ddso.giftcards.dto.CompanyResponseDTO;
 import ar.edu.unsam.ddso.giftcards.exception.CompanyNotFoundException;
+import ar.edu.unsam.ddso.giftcards.exception.DuplicateCuilException;
 import ar.edu.unsam.ddso.giftcards.model.Company;
 import ar.edu.unsam.ddso.giftcards.repository.CompanyRepository;
 
@@ -72,5 +75,18 @@ class CompanyServiceTest {
 
         // When / Then
         assertThrows(CompanyNotFoundException.class, () -> companyService.findById(99L));
+    }
+
+    @Test
+    void throwsWhenCuilAlreadyExists() {
+        // Given
+        CompanyService companyService = new CompanyService(companyRepository);
+        CompanyCreateRequestDTO request =
+                new CompanyCreateRequestDTO("Acme", "Retail", "30-11111111-1", null);
+        when(companyRepository.existsByCuil("30-11111111-1")).thenReturn(true);
+
+        // When / Then
+        assertThrows(DuplicateCuilException.class, () -> companyService.create(request));
+        verify(companyRepository, never()).save(any(Company.class));
     }
 }

@@ -9,4 +9,6 @@ public interface CompanyRepository {
     Company save(Company company);
 
     Optional<Company> findById(Long id);
+
+    boolean existsByCuil(String cuil);
 }

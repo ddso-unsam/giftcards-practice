@@ -3,6 +3,7 @@ package ar.edu.unsam.ddso.giftcards.service;
 import ar.edu.unsam.ddso.giftcards.dto.CompanyCreateRequestDTO;
 import ar.edu.unsam.ddso.giftcards.dto.CompanyResponseDTO;
 import ar.edu.unsam.ddso.giftcards.exception.CompanyNotFoundException;
+import ar.edu.unsam.ddso.giftcards.exception.DuplicateCuilException;
 import ar.edu.unsam.ddso.giftcards.model.Company;
 import ar.edu.unsam.ddso.giftcards.repository.CompanyRepository;
 
@@ -22,6 +23,9 @@ public class CompanyService {
 
     @Transactional
     public CompanyResponseDTO create(CompanyCreateRequestDTO request) {
+        if (companyRepository.existsByCuil(request.cuil())) {
+            throw new DuplicateCuilException(request.cuil());
+        }
         Company company =
                 new Company(
                         null,

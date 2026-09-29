@@ -29,7 +29,7 @@ public class Company {
 
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String cuil;
 
     private String notificationUrl;
