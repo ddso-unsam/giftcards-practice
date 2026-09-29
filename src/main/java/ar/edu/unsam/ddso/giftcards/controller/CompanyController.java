@@ -4,6 +4,8 @@ import ar.edu.unsam.ddso.giftcards.dto.CompanyCreateRequestDTO;
 import ar.edu.unsam.ddso.giftcards.dto.CompanyResponseDTO;
 import ar.edu.unsam.ddso.giftcards.service.CompanyService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +26,8 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanyResponseDTO> create(@RequestBody CompanyCreateRequestDTO request) {
+    public ResponseEntity<CompanyResponseDTO> create(
+            @Valid @RequestBody CompanyCreateRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(companyService.create(request));
     }
 

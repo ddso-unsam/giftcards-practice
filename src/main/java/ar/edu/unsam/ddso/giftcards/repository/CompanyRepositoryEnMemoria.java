@@ -41,4 +41,9 @@ public class CompanyRepositoryEnMemoria implements CompanyRepository {
     public Optional<Company> findById(Long id) {
         return Optional.ofNullable(companies.get(id));
     }
+
+    @Override
+    public boolean existsByCuil(String cuil) {
+        return companies.values().stream().anyMatch(company -> company.getCuil().equals(cuil));
+    }
 }
